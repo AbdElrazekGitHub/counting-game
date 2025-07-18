@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>مسابقة العد للأطفال | MathFun</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Cairo', sans-serif;
+      text-align: center;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      padding: 20px;
+      min-height: 100vh;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: white;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+    h1 {
+      color: #ff6b6b;
+      margin-bottom: 10px;
+    }
+    .shape-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 15px;
+      margin: 25px 0;
+    }
+    .shape {
+      width: 60px;
+      height: 60px;
+      background-color: #74b9ff;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      color: white;
+      box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+    }
+    .emoji-shape {
+      font-size: 35px;
+    }
+    input, button {
+      padding: 12px 20px;
+      margin: 10px;
+      font-size: 18px;
+      font-family: 'Cairo', sans-serif;
+      border-radius: 8px;
+      border: 2px solid #ddd;
+    }
+    button {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    button:hover {
+      background-color: #45a049;
+      transform: translateY(-2px);
+    }
+    #restart-btn {
+      background-color: #ff9800;
+      font-weight: bold;
+    }
+    #restart-btn:hover {
+      background-color: #e68a00;
+    }
+    #print-btn {
+      background-color: #2196F3;
+      margin-left: 10px;
+    }
+    #print-btn:hover {
+      background-color: #0b7dda;
+    }
+    .certificate {
+      display: none;
+      padding: 40px 30px;
+      margin-top: 20px;
+      border-radius: 15px;
+      background: white;
+      color: #2c3e50;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+      border: 2px solid #ffd700;
+      position: relative;
+    }
+    .certificate-content {
+      position: relative;
+      z-index: 1;
+    }
+    .certificate h1 {
+      color: #d4af37;
+      font-size: 28px;
+      margin-bottom: 20px;
+      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+    }
+    .certificate h2 {
+      color: #2c3e50;
+      font-size: 24px;
+      margin: 15px 0;
+      padding: 10px;
+      background: rgba(255, 215, 0, 0.1);
+      border-radius: 8px;
+      display: inline-block;
+    }
+    .progress {
+      margin: 20px 0;
+      font-weight: bold;
+      font-size: 18px;
+      color: #2c3e50;
+    }
+    .alert {
+      background-color: #f8d7da;
+      color: #721c24;
+      padding: 12px;
+      border-radius: 8px;
+      margin: 15px 0;
+      display: none;
+      font-weight: bold;
+    }
+    .logo {
+      font-weight: bold;
+      color: #4CAF50;
+      margin-top: 10px;
+      font-size: 18px;
+    }
+    .gold-border {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      right: 10px;
+      bottom: 10px;
+      border: 1px dashed #d4af37;
+      border-radius: 10px;
+      pointer-events: none;
+    }
+    .buttons-container {
+      margin-top: 20px;
+    }
+    @media print {
+      .no-print {
+        display: none !important;
+      }
+      body, .container {
+        background: white;
+        box-shadow: none;
+        padding: 0;
+      }
+      .certificate {
+        border: none;
+        box-shadow: none;
+        page-break-after: always;
+      }
+    }
+    /* مؤثرات بصرية عند الإجابة */
+    .highlight-correct {
+      animation: flashGreen 0.5s ease-in-out;
+    }
+    .highlight-wrong {
+      animation: flashRed 0.5s ease-in-out;
+    }
+    @keyframes flashGreen {
+      from { background-color: #d4edda; }
+      to { background-color: transparent; }
+    }
+    @keyframes flashRed {
+      from { background-color: #f8d7da; }
+      to { background-color: transparent; }
+    }
+    @media (max-width: 480px) {
+      .shape { width: 45px; height: 45px; font-size: 22px; }
+      input, button { font-size: 16px; padding: 10px; }
+      h1, h2 { font-size: 22px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div id="name-section">
+      <h1>مسابقة العد للأطفال 🎉</h1>
+      <p>أدخل اسمك ثم اضغط "ابدأ المسابقة":</p>
+      <label for="child-name"><strong>اسم الطفل:</strong></label><br>
+      <input type="text" id="child-name" placeholder="اسمك هنا...">
+      <button type="button" onclick="startQuiz()">ابدأ المسابقة</button>
+      <div class="logo">MathFunWithMrAbdelrazek</div>
+    </div>
+
+    <div id="quiz-section" style="display: none;">
+      <h2 id="question-title">عدّ الأشكال التالية:</h2>
+      <div class="alert" id="alert-box"></div>
+      <div class="shape-container" id="shapes-box"></div>
+      <input type="number" id="answer-input" placeholder="اكتب العدد هنا...">
+      <button onclick="checkAnswer()">تحقق</button>
+      <div class="progress" id="progress">السؤال 1 من 10</div>
+    </div>
+
+    <div id="certificate-section" class="certificate">
+      <div class="gold-border"></div>
+      <div class="certificate-content">
+        <h1>شهادة تميز في العد 🏆</h1>
+        <p>تُمنح هذه الشهادة إلى:</p>
+        <h2 id="certificate-name">[اسم الطفل]</h2>
+        <p>لإتمامه مسابقة العد بنجاح مع قناة</p>
+        <p style="font-weight: bold; color: #4CAF50;">MathFunWithMrAbdelrazek</p>
+        <p>درجته: <span style="font-size: 24px; color: #d4af37;" id="score">7</span>/10</p>
+        <p>🎉 نعتز بإنجازك وتميزك! 🎉</p>
+        <div class="buttons-container no-print">
+          <button id="restart-btn" onclick="restartQuiz()">بدء مسابقة جديدة</button>
+          <button id="print-btn" onclick="window.print()">طباعة الشهادة</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <audio id="correct-sound" src="https://assets.mixkit.co/sfx/preview/mixkit-correct-answer-tone-2870.mp3"></audio>
+  <audio id="wrong-sound" src="https://assets.mixkit.co/sfx/preview/mixkit-wrong-answer-fail-notification-946.mp3"></audio>
+  <audio id="applause-sound" src="https://assets.mixkit.co/sfx/preview/mixkit-achievement-bell-600.mp3"></audio>
+
+  <script>
+    let currentQuestion = 0;
+    let score = 0;
+    let childName = "";
+    let previousCounts = [];
+
+    const shapes = ['⭐', '🐻', '🍎', '⚽', '❤️', '🐱', '🍕', '🚗', '🎈', '🦋'];
+    const colors = ['#74b9ff', '#a29bfe', '#fd79a8', '#55efc4', '#ffeaa7'];
+
+    const correctSound = document.getElementById("correct-sound");
+    const wrongSound = document.getElementById("wrong-sound");
+    const applauseSound = document.getElementById("applause-sound");
+
+    function startQuiz() {
+      childName = document.getElementById("child-name").value.trim();
+      if (!childName) {
+        showAlert("الرجاء إدخال اسمك!");
+        return;
+      }
+      previousCounts = [];
+      document.getElementById("name-section").style.display = "none";
+      document.getElementById("quiz-section").style.display = "block";
+      generateQuestion();
+    }
+
+    function generateQuestion() {
+      const shapesBox = document.getElementById("shapes-box");
+      shapesBox.innerHTML = "";
+
+      let shapesCount;
+      do {
+        shapesCount = Math.floor(Math.random() * 10) + 1;
+      } while (previousCounts.includes(shapesCount) && previousCounts.length < 9);
+      previousCounts.push(shapesCount);
+
+      const useEmoji = Math.random() > 0.5;
+
+      for (let i = 0; i < shapesCount; i++) {
+        const shape = document.createElement("div");
+        shape.className = "shape " + (useEmoji ? "emoji-shape" : "");
+        if (useEmoji) {
+          shape.textContent = shapes[Math.floor(Math.random() * shapes.length)];
+        } else {
+          shape.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        }
+        shapesBox.appendChild(shape);
+      }
+
+      document.getElementById("progress").textContent = `السؤال ${currentQuestion + 1} من 10`;
+    }
+
+    function showAlert(message) {
+      const alertBox = document.getElementById("alert-box");
+      alertBox.textContent = message;
+      alertBox.style.display = "block";
+      setTimeout(() => {
+        alertBox.style.display = "none";
+      }, 3000);
+    }
+
+    function checkAnswer() {
+      const answerInput = document.getElementById("answer-input");
+      const userAnswer = parseInt(answerInput.value);
+      const correctAnswer = document.getElementById("shapes-box").children.length;
+
+      const shapesBox = document.getElementById("shapes-box");
+
+      if (isNaN(userAnswer)) {
+        showAlert("الرجاء إدخال عدد صحيح!");
+        return;
+      }
+
+      if (userAnswer === correctAnswer) {
+        score++;
+        showAlert("🎉 إجابة صحيحة! أحسنت!");
+        correctSound.play();
+        shapesBox.classList.add("highlight-correct");
+      } else {
+        showAlert(`❌ الإجابة الصحيحة هي ${correctAnswer}. حاول مرة أخرى!`);
+        wrongSound.play();
+        shapesBox.classList.add("highlight-wrong");
+      }
+
+      setTimeout(() => {
+        shapesBox.classList.remove("highlight-correct", "highlight-wrong");
+      }, 500);
+
+      answerInput.value = "";
+      currentQuestion++;
+
+      if (currentQuestion < 10) {
+        generateQuestion();
+      } else {
+        endQuiz();
+      }
+    }
+
+    function endQuiz() {
+      document.getElementById("quiz-section").style.display = "none";
+      document.getElementById("certificate-section").style.display = "block";
+      document.getElementById("certificate-name").textContent = childName;
+      document.getElementById("score").textContent = score;
+      applauseSound.play();
+    }
+
+    function restartQuiz() {
+      currentQuestion = 0;
+      score = 0;
+      document.getElementById("certificate-section").style.display = "none";
+      document.getElementById("name-section").style.display = "block";
+      document.getElementById("child-name").value = "";
+      previousCounts = [];
+    }
+  </script>
+</body>
+</html>
